@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "minecraft:dark_forest",
+  "features": "spring_to_life:patch_leaf_litter",
+  "step": "vegetal_decoration"
+}

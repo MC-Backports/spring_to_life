@@ -37,6 +37,8 @@ public class STLCreativeTabs {
                     output.accept(STLItems.TALL_DRY_GRASS.get());
                     output.accept(STLItems.CACTUS_FLOWER.get());
                 }));
+
+        provider.finalizeRegistrationStage(IRegistrationProvider.RegistrationStage.CREATIVE_TABS);
     }
 
 }

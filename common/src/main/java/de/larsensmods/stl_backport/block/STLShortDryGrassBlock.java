@@ -24,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class STLShortDryGrassBlock extends STLDryVegetationBlock implements BonemealableBlock {
 
-    public static final MapCodec<STLShortDryGrassBlock> CODEC = simpleCodec(STLShortDryGrassBlock::new);
     private static final VoxelShape SHAPE = Block.box(2.0, 0.0, 2.0, 14.0, 10.0, 14.0);
 
     protected STLShortDryGrassBlock(BlockBehaviour.Properties properties) {
@@ -35,8 +34,8 @@ public class STLShortDryGrassBlock extends STLDryVegetationBlock implements Bone
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         if (random.nextInt(200) == 0){
             if(
-                    level.getBlockState(pos.below()).is(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "desert_dry_vegetation_sound_trigger"))) &&
-                            level.getBlockState(pos.below().below()).is(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "desert_dry_vegetation_sound_trigger"))))
+                    level.getBlockState(pos.below()).is(TagKey.create(Registries.BLOCK, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "desert_dry_vegetation_sound_trigger"))) &&
+                            level.getBlockState(pos.below().below()).is(TagKey.create(Registries.BLOCK, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "desert_dry_vegetation_sound_trigger"))))
             {
                 if (level.isClientSide()) {
                     SoundUtil.playPlayerSoundEffect(STLSoundEvents.DRY_GRASS.get(), SoundSource.AMBIENT, 1.0F, 1.0F, random.nextLong());
@@ -46,7 +45,7 @@ public class STLShortDryGrassBlock extends STLDryVegetationBlock implements Bone
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, boolean isClient) {
         return true;
     }
 
@@ -61,13 +60,9 @@ public class STLShortDryGrassBlock extends STLDryVegetationBlock implements Bone
     }
 
     @Override
-    protected @NotNull VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
+    @NotNull
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
         return SHAPE;
-    }
-
-    @Override
-    public @NotNull MapCodec<? extends STLDryVegetationBlock> codec() {
-        return CODEC;
     }
 
 }

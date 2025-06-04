@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class WarmChickenRenderer extends MobRenderer<WarmChicken, WarmChickenModel> {
 
-    private static final ResourceLocation CHICKEN_LOCATION = ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "textures/entity/warm_chicken.png");
+    private static final ResourceLocation CHICKEN_LOCATION = ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "textures/entity/warm_chicken.png");
 
     public WarmChickenRenderer(EntityRendererProvider.Context context) {
         super(context, new WarmChickenModel(context.bakeLayer(ModelLayers.CHICKEN)), 0.3F);

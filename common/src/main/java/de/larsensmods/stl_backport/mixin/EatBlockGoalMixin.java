@@ -15,6 +15,6 @@ import java.util.function.Predicate;
 public class EatBlockGoalMixin {
 
     @Shadow
-    private static final Predicate<BlockState> IS_TALL_GRASS = state -> state.is(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "sheep_edible_blocks")));
+    private static final Predicate<BlockState> IS_TALL_GRASS = state -> state.is(TagKey.create(Registries.BLOCK, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "sheep_edible_blocks")));
 
 }

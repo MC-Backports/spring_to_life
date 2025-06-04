@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ColdCowRenderer extends MobRenderer<ColdCow, ColdCowModel> {
 
-    private static final ResourceLocation COW_LOCATION = ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "textures/entity/cold_cow.png");
+    private static final ResourceLocation COW_LOCATION = ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "textures/entity/cold_cow.png");
 
     public ColdCowRenderer(EntityRendererProvider.Context context) {
         super(context, new ColdCowModel(context.bakeLayer(STLModelLayers.COLD_COW)), 0.7F);

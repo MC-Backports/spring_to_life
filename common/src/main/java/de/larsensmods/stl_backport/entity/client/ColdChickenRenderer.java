@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ColdChickenRenderer extends MobRenderer<ColdChicken, ColdChickenModel> {
 
-    private static final ResourceLocation CHICKEN_LOCATION = ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "textures/entity/cold_chicken.png");
+    private static final ResourceLocation CHICKEN_LOCATION = ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "textures/entity/cold_chicken.png");
 
     public ColdChickenRenderer(EntityRendererProvider.Context context) {
         super(context, new ColdChickenModel(context.bakeLayer(STLModelLayers.COLD_CHICKEN)), 0.3F);

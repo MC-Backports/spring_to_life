@@ -13,6 +13,8 @@ public class STLDecoratorTypes {
     public static void initDecoratorTypes(IRegistrationProvider provider) {
         ATTACHED_TO_LOG = provider.registerTreeDecoratorType("attached_to_log", AttachedToLogDecorator.CODEC);
         PLACE_ON_GROUND = provider.registerTreeDecoratorType("place_on_ground", PlaceOnGroundDecorator.CODEC);
+
+        provider.finalizeRegistrationStage(IRegistrationProvider.RegistrationStage.TREE_DECORATOR_TYPES);
     }
 
 }

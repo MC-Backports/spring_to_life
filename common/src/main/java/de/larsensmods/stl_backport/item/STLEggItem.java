@@ -1,22 +1,18 @@
 package de.larsensmods.stl_backport.item;
 
 import de.larsensmods.stl_backport.entity.projectile.STLThrownEgg;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.EggItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class STLEggItem extends Item implements ProjectileItem {
+public class STLEggItem extends EggItem {
 
     public STLEggItem(Properties properties) {
         super(properties);
@@ -36,15 +32,11 @@ public class STLEggItem extends Item implements ProjectileItem {
         }
 
         player.awardStat(Stats.ITEM_USED.get(this));
-        itemStack.consume(1, player);
-        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
-    }
+        if (!player.getAbilities().instabuild) {
+            itemStack.shrink(1);
+        }
 
-    @Override
-    public @NotNull Projectile asProjectile(Level level, Position pos, ItemStack stack, Direction direction) {
-        STLThrownEgg thrownEgg = new STLThrownEgg(level, pos.x(), pos.y(), pos.z());
-        thrownEgg.setItem(stack);
-        return thrownEgg;
+        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
     }
 
 }

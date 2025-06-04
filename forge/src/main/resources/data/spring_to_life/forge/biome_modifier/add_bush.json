@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#spring_to_life:bush_biomes",
+  "features": "spring_to_life:patch_bush",
+  "step": "vegetal_decoration"
+}

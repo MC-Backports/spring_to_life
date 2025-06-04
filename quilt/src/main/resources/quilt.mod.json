@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "${group}",
+    "id": "spring_to_life",
+    "version": "${version}",
+    "metadata": {
+      "name": "Spring to Life",
+      "description": "This mod ports some features from the \"Spring to Life\" feature drop (Minecraft 1.21.5) back to 1.21.1",
+      "contributors": {
+        "LarsenR": "Author"
+      },
+      "icon": "assets/spring_to_life/icon.png"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": [
+        "de.larsensmods.stl_backport.quilt.SpringToLifeModQuilt"
+      ],
+      "client_init": [
+        "de.larsensmods.stl_backport.quilt.client.SpringToLifeModQuiltClient"
+      ]
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "version": "*"
+      },
+      {
+        "id": "quilt_base",
+        "version": "*"
+      },
+      {
+        "id": "minecraft",
+        "version": ">=1.20.1"
+      }
+    ]
+  },
+  "mixin": [
+    "spring_to_life.mixins.json",
+    "spring_to_life_fablike.mixins.json"
+  ]
+}

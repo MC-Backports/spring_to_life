@@ -1,6 +1,5 @@
 package de.larsensmods.stl_backport.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -22,8 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 public class STLLeafLitterBlock extends BushBlock implements SegmentableBlock {
-
-    public static final MapCodec<STLLeafLitterBlock> CODEC = simpleCodec(STLLeafLitterBlock::new);
 
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     private final Function<BlockState, VoxelShape> shapes;
@@ -54,7 +51,7 @@ public class STLLeafLitterBlock extends BushBlock implements SegmentableBlock {
     }
 
     @Override
-    protected boolean canSurvive(BlockState state, LevelReader levelReader, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader levelReader, BlockPos pos) {
         BlockPos belowPos = pos.below();
         return levelReader.getBlockState(belowPos).isFaceSturdy(levelReader, belowPos, Direction.UP);
     }
@@ -72,11 +69,6 @@ public class STLLeafLitterBlock extends BushBlock implements SegmentableBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateDefinitionBuilder) {
         stateDefinitionBuilder.add(FACING, this.getSegmentAmountProperty());
-    }
-
-    @Override
-    protected @NotNull MapCodec<STLLeafLitterBlock> codec() {
-        return CODEC;
     }
 
 }

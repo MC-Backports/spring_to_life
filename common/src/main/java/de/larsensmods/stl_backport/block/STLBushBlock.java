@@ -1,6 +1,5 @@
 package de.larsensmods.stl_backport.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -21,7 +20,6 @@ import java.util.Optional;
 
 public class STLBushBlock extends BushBlock implements BonemealableBlock {
 
-    public static final MapCodec<STLBushBlock> CODEC = simpleCodec(STLBushBlock::new);
     private static final VoxelShape SHAPE = Block.box(8.0 - 16.0 / 2.0, 0.0, 8.0 - 16.0 / 2.0, 8.0 + 16.0 / 2.0, 13.0, 8.0 + 16.0 / 2.0);
 
     protected STLBushBlock(Properties properties) {
@@ -29,7 +27,7 @@ public class STLBushBlock extends BushBlock implements BonemealableBlock {
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, boolean isClient) {
         return getValidSpreadPos(Direction.Plane.HORIZONTAL.stream().toList(), level, pos, state).isPresent();
     }
 
@@ -45,13 +43,9 @@ public class STLBushBlock extends BushBlock implements BonemealableBlock {
     }
 
     @Override
-    protected @NotNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    @NotNull
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
-    }
-
-    @Override
-    protected @NotNull MapCodec<? extends BushBlock> codec() {
-        return CODEC;
     }
 
     private Optional<BlockPos> getValidSpreadPos(List<Direction> directions, LevelReader levelReader, BlockPos blockPos, BlockState state) {

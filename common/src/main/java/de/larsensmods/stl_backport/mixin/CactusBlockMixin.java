@@ -19,7 +19,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class CactusBlockMixin {
 
     @Shadow @Final public static IntegerProperty AGE;
-    @Shadow protected abstract boolean canSurvive(BlockState state, LevelReader level, BlockPos pos);
+    @Shadow
+    public abstract boolean canSurvive(BlockState state, LevelReader level, BlockPos pos);
 
     @Inject(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getValue(Lnet/minecraft/world/level/block/state/properties/Property;)Ljava/lang/Comparable;", shift = At.Shift.AFTER))
     protected void randomTickIf(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {

@@ -1,9 +1,9 @@
 package de.larsensmods.stl_backport.mixin;
 
 import de.larsensmods.stl_backport.SpringToLifeMod;
+import de.larsensmods.stl_backport.particles.ColorParticleOption;
 import de.larsensmods.stl_backport.particles.STLParticleTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.util.ParticleUtils;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;

@@ -17,7 +17,6 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 
 public class STLThrownEgg extends ThrowableItemProjectile {
-    private static final EntityDimensions ZERO_SIZED_DIMENSIONS = EntityDimensions.fixed(0.0F, 0.0F);
 
     public STLThrownEgg(EntityType<? extends STLThrownEgg> entityType, Level level) {
         super(entityType, level);
@@ -72,10 +71,6 @@ public class STLThrownEgg extends ThrowableItemProjectile {
                     if (chicken != null) {
                         chicken.setAge(-24000);
                         chicken.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
-                        if (!chicken.fudgePositionAfterSizeChange(ZERO_SIZED_DIMENSIONS)) {
-                            break;
-                        }
-
                         this.level().addFreshEntity(chicken);
                     }
                 }

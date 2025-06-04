@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_table",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/ruined_portal"
+    }
+  ],
+  "table": "spring_to_life:chests/ruined_portal_lodestone"
+}

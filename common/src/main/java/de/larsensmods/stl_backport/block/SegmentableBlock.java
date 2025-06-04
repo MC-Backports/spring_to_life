@@ -39,7 +39,16 @@ public interface SegmentableBlock {
                 resultDirection = resultDirection.getCounterClockWise();
             }
 
-            return resultShape.singleEncompassing();
+            return resultShape.isEmpty()
+                    ? Shapes.empty()
+                    : Shapes.box(
+                    resultShape.min(Direction.Axis.X),
+                    resultShape.min(Direction.Axis.Y),
+                    resultShape.min(Direction.Axis.Z),
+                    resultShape.max(Direction.Axis.X),
+                    resultShape.max(Direction.Axis.Y),
+                    resultShape.max(Direction.Axis.Z)
+            );
         };
     }
 

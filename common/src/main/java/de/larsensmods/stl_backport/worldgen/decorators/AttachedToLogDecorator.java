@@ -17,7 +17,7 @@ import java.util.List;
 
 public class AttachedToLogDecorator extends TreeDecorator {
 
-    public static final MapCodec<AttachedToLogDecorator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final Codec<AttachedToLogDecorator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.floatRange(0.0F, 1.0F).fieldOf("probability").forGetter(decorator -> decorator.probability),
             BlockStateProvider.CODEC.fieldOf("block_provider").forGetter(decorator -> decorator.blockProvider),
             ExtraCodecs.nonEmptyList(Direction.CODEC.listOf()).fieldOf("directions").forGetter(decorator -> decorator.directions)

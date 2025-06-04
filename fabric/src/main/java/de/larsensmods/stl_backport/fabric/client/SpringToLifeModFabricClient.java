@@ -8,12 +8,10 @@ import de.larsensmods.stl_backport.item.STLItems;
 import de.larsensmods.stl_backport.particles.STLParticleTypes;
 import de.larsensmods.stl_backport.particles.client.FallingLeavesParticle;
 import de.larsensmods.stl_backport.particles.client.FireflyParticle;
-import de.larsensmods.stl_backport.util.ClientColorUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorResolverRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -47,8 +45,6 @@ public final class SpringToLifeModFabricClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(STLBlocks.SHORT_DRY_GRASS.get(), RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(STLBlocks.TALL_DRY_GRASS.get(), RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(STLBlocks.CACTUS_FLOWER.get(), RenderType.cutout());
-
-        ColorResolverRegistry.register(ClientColorUtils.DRY_FOLIAGE_COLOR_RESOLVER);
 
         ColorProviderRegistry.BLOCK.register((state, level, pos, tintIndex) -> level != null && pos != null
                         ? SpringToLifeMod.getColorUtils().getAverageDryFoliageColor(level, pos)

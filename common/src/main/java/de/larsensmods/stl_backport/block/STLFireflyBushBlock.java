@@ -1,6 +1,5 @@
 package de.larsensmods.stl_backport.block;
 
-import com.mojang.serialization.MapCodec;
 import de.larsensmods.stl_backport.audio.STLSoundEvents;
 import de.larsensmods.stl_backport.particles.STLParticleTypes;
 import net.minecraft.core.BlockPos;
@@ -15,14 +14,11 @@ import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
 
 public class STLFireflyBushBlock extends BushBlock implements BonemealableBlock {
-
-    public static final MapCodec<STLFireflyBushBlock> CODEC = simpleCodec(STLFireflyBushBlock::new);
 
     public STLFireflyBushBlock(BlockBehaviour.Properties properties) {
         super(properties);
@@ -45,7 +41,7 @@ public class STLFireflyBushBlock extends BushBlock implements BonemealableBlock 
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, boolean isClient) {
         return getValidSpreadPos(Direction.Plane.HORIZONTAL.stream().toList(), level, pos, state).isPresent();
     }
 
@@ -58,11 +54,6 @@ public class STLFireflyBushBlock extends BushBlock implements BonemealableBlock 
     public void performBonemeal(ServerLevel level, RandomSource random, BlockPos blockPos, BlockState state) {
         Optional<BlockPos> neighbourPos = getValidSpreadPos(Direction.Plane.HORIZONTAL.shuffledCopy(level.random), level, blockPos, state);
         neighbourPos.ifPresent(pos -> level.setBlockAndUpdate(pos, this.defaultBlockState()));
-    }
-
-    @Override
-    protected @NotNull MapCodec<? extends STLFireflyBushBlock> codec() {
-        return CODEC;
     }
 
     private boolean isMoonVisible(Level level) {

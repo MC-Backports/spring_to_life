@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": ["minecraft:birch_forest", "minecraft:old_growth_birch_forest"],
+  "features": "spring_to_life:wildflowers_birch_forest",
+  "step": "vegetal_decoration"
+}

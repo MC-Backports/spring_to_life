@@ -11,13 +11,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class ColdPigRenderer extends MobRenderer<ColdPig, ColdPigModel> {
 
-    private static final ResourceLocation PIG_LOCATION = ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "textures/entity/cold_pig.png");
+    private static final ResourceLocation PIG_LOCATION = ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "textures/entity/cold_pig.png");
 
     public ColdPigRenderer(EntityRendererProvider.Context context) {
         super(context, new ColdPigModel(context.bakeLayer(STLModelLayers.COLD_PIG)), 0.7F);
         this.addLayer(
                 new SaddleLayer<>(
-                        this, new ColdPigModel(context.bakeLayer(ModelLayers.PIG_SADDLE)), ResourceLocation.withDefaultNamespace("textures/entity/pig/pig_saddle.png")
+                        this, new ColdPigModel(context.bakeLayer(ModelLayers.PIG_SADDLE)), ResourceLocation.tryBuild(ResourceLocation.DEFAULT_NAMESPACE, "textures/entity/pig/pig_saddle.png")
                 )
         );
     }

@@ -1,0 +1,5 @@
+{
+  "type": "forge:remove_spawns",
+  "biomes": "#spring_to_life:warm_animal_biomes",
+  "entity_types": "#spring_to_life:tempered_animals"
+}

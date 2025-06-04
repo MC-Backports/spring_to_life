@@ -11,6 +11,8 @@ public class STLFeatures {
 
     public static void initFeatures(IRegistrationProvider provider){
         FALLEN_TREE = provider.registerFeature("fallen_tree", () -> new FallenTreeFeature(FallenTreeFeatureConfig.CODEC));
+
+        provider.finalizeRegistrationStage(IRegistrationProvider.RegistrationStage.FEATURES);
     }
 
 }

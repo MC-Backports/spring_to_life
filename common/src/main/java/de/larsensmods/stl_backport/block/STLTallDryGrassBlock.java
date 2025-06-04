@@ -1,6 +1,5 @@
 package de.larsensmods.stl_backport.block;
 
-import com.mojang.serialization.MapCodec;
 import de.larsensmods.stl_backport.SpringToLifeMod;
 import de.larsensmods.stl_backport.audio.STLSoundEvents;
 import de.larsensmods.stl_backport.util.SoundUtil;
@@ -28,7 +27,6 @@ import java.util.Optional;
 
 public class STLTallDryGrassBlock extends STLDryVegetationBlock implements BonemealableBlock {
 
-    public static final MapCodec<STLTallDryGrassBlock> CODEC = simpleCodec(STLTallDryGrassBlock::new);
     private static final VoxelShape SHAPE = Block.box(1.0, 0.0, 1.0, 15.0, 16.0, 15.0);
 
     protected STLTallDryGrassBlock(BlockBehaviour.Properties properties) {
@@ -39,8 +37,8 @@ public class STLTallDryGrassBlock extends STLDryVegetationBlock implements Bonem
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         if (random.nextInt(200) == 0){
             if(
-                    level.getBlockState(pos.below()).is(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "desert_dry_vegetation_sound_trigger"))) &&
-                        level.getBlockState(pos.below().below()).is(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "desert_dry_vegetation_sound_trigger"))))
+                    level.getBlockState(pos.below()).is(TagKey.create(Registries.BLOCK, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "desert_dry_vegetation_sound_trigger"))) &&
+                        level.getBlockState(pos.below().below()).is(TagKey.create(Registries.BLOCK, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "desert_dry_vegetation_sound_trigger"))))
             {
                 if (level.isClientSide()) {
                     SoundUtil.playPlayerSoundEffect(STLSoundEvents.DRY_GRASS.get(), SoundSource.AMBIENT, 1.0F, 1.0F, random.nextLong());
@@ -50,7 +48,7 @@ public class STLTallDryGrassBlock extends STLDryVegetationBlock implements Bonem
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, boolean isClient) {
         return getValidSpreadPos(Direction.Plane.HORIZONTAL.stream().toList(), level, pos, STLBlocks.SHORT_DRY_GRASS.get().defaultBlockState()).isPresent();
     }
 
@@ -66,13 +64,9 @@ public class STLTallDryGrassBlock extends STLDryVegetationBlock implements Bonem
     }
 
     @Override
-    protected @NotNull VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
+    @NotNull
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
         return SHAPE;
-    }
-
-    @Override
-    public @NotNull MapCodec<? extends STLDryVegetationBlock> codec() {
-        return CODEC;
     }
 
     private Optional<BlockPos> getValidSpreadPos(List<Direction> directions, LevelReader levelReader, BlockPos blockPos, BlockState state) {

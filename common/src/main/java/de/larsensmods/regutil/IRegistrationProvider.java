@@ -1,9 +1,12 @@
 package de.larsensmods.regutil;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -29,6 +32,18 @@ public interface IRegistrationProvider {
     <T extends ParticleOptions> Supplier<ParticleType<T>> registerParticleType(String key, Supplier<ParticleType<T>> particleType);
     Supplier<SimpleParticleType> registerParticleTypeSimple(String key);
     Supplier<SoundEvent> registerSoundEvent(String key, Supplier<SoundEvent> soundEvent);
-    <T extends TreeDecorator> Supplier<TreeDecoratorType<T>> registerTreeDecoratorType(String key, MapCodec<T> treeDecoratorTypeCodec);
+    <T extends TreeDecorator> Supplier<TreeDecoratorType<T>> registerTreeDecoratorType(String key, Codec<T> treeDecoratorTypeCodec);
 
+    default void finalizeRegistrationStage(RegistrationStage stage) {}
+
+    enum RegistrationStage {
+        BLOCKS,
+        CREATIVE_TABS,
+        ENTITY_TYPES,
+        FEATURES,
+        ITEMS,
+        PARTICLE_TYPES,
+        SOUNDS,
+        TREE_DECORATOR_TYPES
+    }
 }

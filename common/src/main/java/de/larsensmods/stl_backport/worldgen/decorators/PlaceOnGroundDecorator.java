@@ -1,7 +1,7 @@
 package de.larsensmods.stl_backport.worldgen.decorators;
 
 import com.google.common.collect.Lists;
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ExtraCodecs;
@@ -19,7 +19,7 @@ import java.util.List;
 
 public class PlaceOnGroundDecorator extends TreeDecorator {
 
-    public static final MapCodec<PlaceOnGroundDecorator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final Codec<PlaceOnGroundDecorator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                     ExtraCodecs.POSITIVE_INT.fieldOf("tries").orElse(128).forGetter(decorator -> decorator.tries),
                     ExtraCodecs.NON_NEGATIVE_INT.fieldOf("radius").orElse(2).forGetter(decorator -> decorator.radius),
                     ExtraCodecs.NON_NEGATIVE_INT.fieldOf("height").orElse(1).forGetter(decorator -> decorator.height),
@@ -43,7 +43,7 @@ public class PlaceOnGroundDecorator extends TreeDecorator {
     public void place(TreeDecorator.Context decoratorContext) {
         List<BlockPos> possiblePositions = getLowestTrunkOrRootOfTree(decoratorContext);
         if (!possiblePositions.isEmpty()) {
-            BlockPos firstPos = possiblePositions.getFirst();
+            BlockPos firstPos = possiblePositions.get(0);
             int firstPosY = firstPos.getY();
             int firstPosX = firstPos.getX();
             int firstPosX1 = firstPos.getX();
@@ -60,7 +60,7 @@ public class PlaceOnGroundDecorator extends TreeDecorator {
             }
 
             RandomSource random = decoratorContext.random();
-            BoundingBox boundingBox = new BoundingBox(firstPosX, firstPosY, firstPosZ, firstPosX1, firstPosY, firstPosZ1).inflatedBy(this.radius, this.height, this.radius);
+            BoundingBox boundingBox = new BoundingBox(firstPosX, firstPosY, firstPosZ, firstPosX1, firstPosY, firstPosZ1).inflatedBy(Math.max(this.height, this.radius));
 
             BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 
@@ -90,7 +90,7 @@ public class PlaceOnGroundDecorator extends TreeDecorator {
         List<BlockPos> logs = decoratorContext.logs();
         if (roots.isEmpty()) {
             lowestTrunk.addAll(logs);
-        } else if (!logs.isEmpty() && roots.getFirst().getY() == logs.getFirst().getY()) {
+        } else if (!logs.isEmpty() && roots.get(0).getY() == logs.get(0).getY()) {
             lowestTrunk.addAll(logs);
             lowestTrunk.addAll(roots);
         } else {

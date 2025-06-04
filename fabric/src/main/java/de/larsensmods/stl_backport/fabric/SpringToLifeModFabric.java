@@ -7,21 +7,20 @@ import de.larsensmods.stl_backport.entity.WarmChicken;
 import de.larsensmods.stl_backport.entity.WarmPig;
 import de.larsensmods.stl_backport.fabric.block.STLLeafLitterBlockFabric;
 import de.larsensmods.stl_backport.fabric.register.FabricRegistrationProvider;
+import de.larsensmods.stl_backport.fabriclike.SpringToLifeModFabricLike;
 import de.larsensmods.stl_backport.item.STLItems;
-import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 
 import de.larsensmods.stl_backport.SpringToLifeMod;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
-import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceKey;
@@ -29,11 +28,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.MobSpawnSettings;
@@ -59,7 +58,7 @@ public final class SpringToLifeModFabric implements ModInitializer {
         registrationProvider.addOverrideKey("block:leaf_litter", (Function<BlockBehaviour.Properties, Block>) STLLeafLitterBlockFabric::new);
 
         // Run our common setup.
-        SpringToLifeMod.init(registrationProvider, FabricLoader.getInstance().getEnvironmentType().equals(EnvType.CLIENT));
+        SpringToLifeModFabricLike.init(registrationProvider);
 
         FabricDefaultAttributeRegistry.register(STLEntityTypes.WARM_CHICKEN.get(), WarmChicken.createAttributes());
         FabricDefaultAttributeRegistry.register(STLEntityTypes.COLD_CHICKEN.get(), ColdChicken.createAttributes());
@@ -68,12 +67,12 @@ public final class SpringToLifeModFabric implements ModInitializer {
         FabricDefaultAttributeRegistry.register(STLEntityTypes.WARM_COW.get(), WarmPig.createAttributes());
         FabricDefaultAttributeRegistry.register(STLEntityTypes.COLD_COW.get(), WarmPig.createAttributes());
 
-        SpawnPlacements.register(STLEntityTypes.COLD_CHICKEN.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
-        SpawnPlacements.register(STLEntityTypes.WARM_CHICKEN.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
-        SpawnPlacements.register(STLEntityTypes.COLD_PIG.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
-        SpawnPlacements.register(STLEntityTypes.WARM_PIG.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
-        SpawnPlacements.register(STLEntityTypes.COLD_COW.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
-        SpawnPlacements.register(STLEntityTypes.WARM_COW.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
+        SpawnPlacements.register(STLEntityTypes.COLD_CHICKEN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
+        SpawnPlacements.register(STLEntityTypes.WARM_CHICKEN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
+        SpawnPlacements.register(STLEntityTypes.COLD_PIG.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
+        SpawnPlacements.register(STLEntityTypes.WARM_PIG.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
+        SpawnPlacements.register(STLEntityTypes.COLD_COW.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
+        SpawnPlacements.register(STLEntityTypes.WARM_COW.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
 
         FlammableBlockRegistry.getDefaultInstance().add(STLBlocks.LEAF_LITTER.get(), 60, 100);
         FlammableBlockRegistry.getDefaultInstance().add(STLBlocks.WILDFLOWERS.get(), 60, 100);
@@ -95,71 +94,67 @@ public final class SpringToLifeModFabric implements ModInitializer {
         FuelRegistry.INSTANCE.add(STLItems.SHORT_DRY_GRASS.get(), 5 * 20);
         FuelRegistry.INSTANCE.add(STLItems.TALL_DRY_GRASS.get(), 5 * 20);
 
-        VillagerTrades.ItemListing dryGrassTrade = (trader, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 1), new ItemStack(STLBlocks.TALL_DRY_GRASS.get()), 12, 0, 0);
-        VillagerTrades.ItemListing wildflowersTrade = (trader, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 1), new ItemStack(STLBlocks.WILDFLOWERS.get()), 12, 0, 0);
-        VillagerTrades.ItemListing fireflyBushTrade = (trader, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 3), new ItemStack(STLBlocks.FIREFLY_BUSH.get()), 12, 0, 0);
+        VillagerTrades.ItemListing dryGrassTrade = (trader, random) -> new MerchantOffer(new ItemStack(Items.EMERALD, 1), new ItemStack(STLBlocks.TALL_DRY_GRASS.get()), 12, 0, 0);
+        VillagerTrades.ItemListing wildflowersTrade = (trader, random) -> new MerchantOffer(new ItemStack(Items.EMERALD, 1), new ItemStack(STLBlocks.WILDFLOWERS.get()), 12, 0, 0);
+        VillagerTrades.ItemListing fireflyBushTrade = (trader, random) -> new MerchantOffer(new ItemStack(Items.EMERALD, 3), new ItemStack(STLBlocks.FIREFLY_BUSH.get()), 12, 0, 0);
 
         TradeOfferHelper.registerWanderingTraderOffers(1, factories -> factories.addAll(Set.of(dryGrassTrade, wildflowersTrade)));
         TradeOfferHelper.registerWanderingTraderOffers(2, factories -> factories.add(fireflyBushTrade));
-        //noinspection UnstableApiUsage
-        TradeOfferHelper.registerRebalancedWanderingTraderOffers(wanderingTraderOffersBuilder -> wanderingTraderOffersBuilder.addOffersToPool(TradeOfferHelper.WanderingTraderOffersBuilder.SELL_COMMON_ITEMS_POOL, dryGrassTrade, wildflowersTrade));
-        //noinspection UnstableApiUsage
-        TradeOfferHelper.registerRebalancedWanderingTraderOffers(wanderingTraderOffersBuilder -> wanderingTraderOffersBuilder.addOffersToPool(TradeOfferHelper.WanderingTraderOffersBuilder.SELL_COMMON_ITEMS_POOL, fireflyBushTrade));
 
         this.applyBiomeModifications();
         this.applyLootTableModifications();
     }
 
     private void applyBiomeModifications() {
-        BiomeModifications.create(ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "add_leaf_litter_patches"))
+        BiomeModifications.create(ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "add_leaf_litter_patches"))
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.includeByKey(Biomes.DARK_FOREST),
                         context -> context.getGenerationSettings()
-                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "patch_leaf_litter"))));
+                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "patch_leaf_litter"))));
 
-        BiomeModifications.create(ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "add_wildflowers"))
+        BiomeModifications.create(ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "add_wildflowers"))
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.includeByKey(Biomes.BIRCH_FOREST, Biomes.OLD_GROWTH_BIRCH_FOREST),
                         context -> context.getGenerationSettings()
-                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "wildflowers_birch_forest"))))
+                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "wildflowers_birch_forest"))))
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.includeByKey(Biomes.MEADOW),
                         context -> context.getGenerationSettings()
-                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "wildflowers_meadow"))));
+                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "wildflowers_meadow"))));
 
-        BiomeModifications.create(ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "replace_forest_tree_feature"))
+        BiomeModifications.create(ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "replace_forest_tree_feature"))
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.includeByKey(Biomes.FOREST),
                         context -> {
                     context.getGenerationSettings().removeFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VegetationPlacements.TREES_BIRCH_AND_OAK);
-                    context.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "trees_birch_and_oak_leaf_litter")));
+                    context.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "trees_birch_and_oak_leaf_litter")));
                 });
 
-        BiomeModifications.create(ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "add_bushes"))
-                .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "bush_biomes"))),
+        BiomeModifications.create(ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "add_bushes"))
+                .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(TagKey.create(Registries.BIOME, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "bush_biomes"))),
                         context -> context.getGenerationSettings()
-                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "patch_bush"))));
+                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "patch_bush"))));
 
-        BiomeModifications.create(ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "add_firefly_bushes_default"))
-                .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "default_extra_vegetation_biomes"))),
+        BiomeModifications.create(ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "add_firefly_bushes_default"))
+                .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(TagKey.create(Registries.BIOME, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "default_extra_vegetation_biomes"))),
                         context -> context.getGenerationSettings()
-                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "patch_firefly_bush_water"))));
+                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "patch_firefly_bush_water"))));
 
-        BiomeModifications.create(ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "add_firefly_bushes_swamp"))
+        BiomeModifications.create(ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "add_firefly_bushes_swamp"))
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.includeByKey(Biomes.SWAMP),
                         context -> {
-                    context.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "patch_firefly_bush_swamp")));
-                    context.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "patch_firefly_bush_swamp_water")));
+                    context.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "patch_firefly_bush_swamp")));
+                    context.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "patch_firefly_bush_swamp_water")));
                 });
 
-        BiomeModifications.create(ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "add_firefly_bushes_badlands"))
+        BiomeModifications.create(ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "add_firefly_bushes_badlands"))
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_BADLANDS),
                         context -> context.getGenerationSettings()
-                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "patch_firefly_bush_water"))));
+                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "patch_firefly_bush_water"))));
 
-        BiomeModifications.create(ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "add_firefly_bushes_mangrove_swamp"))
+        BiomeModifications.create(ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "add_firefly_bushes_mangrove_swamp"))
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.includeByKey(Biomes.MANGROVE_SWAMP),
                         context -> context.getGenerationSettings()
-                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "patch_firefly_bush_water"))));
+                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "patch_firefly_bush_water"))));
 
-        BiomeModifications.create(ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "replace_warm_animals"))
-                .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "warm_animal_biomes"))),
+        BiomeModifications.create(ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "replace_warm_animals"))
+                .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(TagKey.create(Registries.BIOME, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "warm_animal_biomes"))),
                         context -> {
                     context.getSpawnSettings().removeSpawnsOfEntityType(EntityType.COW);
                     context.getSpawnSettings().removeSpawnsOfEntityType(EntityType.PIG);
@@ -171,8 +166,8 @@ public final class SpringToLifeModFabric implements ModInitializer {
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.includeByKey(Biomes.JUNGLE, Biomes.BAMBOO_JUNGLE, Biomes.SPARSE_JUNGLE),
                         context -> context.getSpawnSettings().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(STLEntityTypes.WARM_CHICKEN.get(), 10, 4, 4)));
 
-        BiomeModifications.create(ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "replace_cold_animals"))
-                .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "cold_animal_biomes"))),
+        BiomeModifications.create(ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "replace_cold_animals"))
+                .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(TagKey.create(Registries.BIOME, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "cold_animal_biomes"))),
                         context -> {
                     context.getSpawnSettings().removeSpawnsOfEntityType(EntityType.COW);
                     context.getSpawnSettings().removeSpawnsOfEntityType(EntityType.PIG);
@@ -182,20 +177,20 @@ public final class SpringToLifeModFabric implements ModInitializer {
                     context.getSpawnSettings().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(STLEntityTypes.COLD_COW.get(), 8, 4, 4));
                 });
 
-        BiomeModifications.create(ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "camel_desert_spawns"))
+        BiomeModifications.create(ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "camel_desert_spawns"))
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.includeByKey(Biomes.DESERT),
                         context -> context.getSpawnSettings().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(EntityType.CAMEL, 1, 1, 1)));
 
-        BiomeModifications.create(ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "add_dry_grass"))
+        BiomeModifications.create(ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "add_dry_grass"))
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.tag(BiomeTags.IS_BADLANDS),
-                        context -> context.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "patch_dry_grass_badlands"))))
+                        context -> context.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "patch_dry_grass_badlands"))))
                 .add(ModificationPhase.ADDITIONS, BiomeSelectors.includeByKey(Biomes.DESERT),
-                        context -> context.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "patch_dry_grass_desert"))));
+                        context -> context.getGenerationSettings().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "patch_dry_grass_desert"))));
     }
 
     private void applyLootTableModifications(){
-        LootTableEvents.MODIFY.register((resourceKey, builder, lootTableSource, provider) -> {
-            if(lootTableSource.isBuiltin() && BuiltInLootTables.RUINED_PORTAL.equals(resourceKey)){
+        LootTableEvents.MODIFY.register((resourceManager, lootDataManager, resourceLocation, builder, lootTableSource) -> {
+            if (BuiltInLootTables.RUINED_PORTAL.equals(resourceLocation)) {
                 LootPool.Builder newPool = LootPool.lootPool()
                         .with(EmptyLootItem.emptyItem().build())
                         .with(LootItem.lootTableItem(Items.LODESTONE)

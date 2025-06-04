@@ -1,8 +1,8 @@
 package de.larsensmods.stl_backport.particles.client;
 
+import de.larsensmods.stl_backport.particles.ColorParticleOption;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.core.particles.ColorParticleOption;
 import org.jetbrains.annotations.NotNull;
 
 public class FallingLeavesParticle extends TextureSheetParticle {

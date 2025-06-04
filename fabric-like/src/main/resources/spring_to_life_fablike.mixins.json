@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "de.larsensmods.stl_backport.fabriclike.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "client": [
+    "ClientLevelMixin"
+  ],
+  "mixins": [
+
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

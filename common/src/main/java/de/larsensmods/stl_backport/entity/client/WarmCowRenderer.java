@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class WarmCowRenderer extends MobRenderer<WarmCow, WarmCowModel> {
 
-    private static final ResourceLocation COW_LOCATION = ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "textures/entity/warm_cow.png");
+    private static final ResourceLocation COW_LOCATION = ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "textures/entity/warm_cow.png");
 
     public WarmCowRenderer(EntityRendererProvider.Context context) {
         super(context, new WarmCowModel(context.bakeLayer(STLModelLayers.WARM_COW)), 0.7F);

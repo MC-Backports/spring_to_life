@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#spring_to_life:default_extra_vegetation_biomes",
+  "features": [ "spring_to_life:patch_firefly_bush_water" ],
+  "step": "vegetal_decoration"
+}

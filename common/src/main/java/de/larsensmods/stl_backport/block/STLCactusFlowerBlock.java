@@ -1,6 +1,5 @@
 package de.larsensmods.stl_backport.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -15,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class STLCactusFlowerBlock extends BushBlock {
 
-    public static final MapCodec<STLCactusFlowerBlock> CODEC = simpleCodec(STLCactusFlowerBlock::new);
     private static final VoxelShape SHAPE = Block.box(8.0 - 14.0 / 2.0, 0.0, 8.0 - 14.0 / 2.0, 8.0 + 14.0 / 2.0, 12.0, 8.0 + 14.0 / 2.0);
 
     protected STLCactusFlowerBlock(Properties properties) {
@@ -23,7 +21,8 @@ public class STLCactusFlowerBlock extends BushBlock {
     }
 
     @Override
-    protected @NotNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    @NotNull
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
@@ -31,10 +30,5 @@ public class STLCactusFlowerBlock extends BushBlock {
     protected boolean mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos) {
         BlockState placeOn = level.getBlockState(pos);
         return placeOn.is(Blocks.CACTUS) || placeOn.is(Blocks.FARMLAND) || placeOn.isFaceSturdy(level, pos, Direction.UP, SupportType.CENTER);
-    }
-
-    @Override
-    protected @NotNull MapCodec<? extends BushBlock> codec() {
-        return CODEC;
     }
 }

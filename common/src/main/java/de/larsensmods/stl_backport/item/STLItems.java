@@ -113,6 +113,8 @@ public class STLItems {
                 STLBlocks.CACTUS_FLOWER,
                 new Item.Properties()
         );
+
+        registrationProvider.finalizeRegistrationStage(IRegistrationProvider.RegistrationStage.ITEMS);
     }
 
     private static Supplier<Item> registerBlockItem(IRegistrationProvider provider, String key, Supplier<Block> block, Item.Properties properties){

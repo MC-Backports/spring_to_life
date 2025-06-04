@@ -23,13 +23,13 @@
     ]
   },
   "mixins": [
-    "spring_to_life.mixins.json"
+    "spring_to_life.mixins.json",
+    "spring_to_life_fablike.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.16.14",
-    "minecraft": "~1.21.1",
-    "java": ">=21",
-    "fabric-api": "*"
+    "minecraft": "~1.20.1",
+    "java": ">=17"
   },
   "suggests": {
     "another-mod": "*"

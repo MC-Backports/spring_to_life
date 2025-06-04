@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_badlands",
+  "features": "spring_to_life:patch_dry_grass_badlands",
+  "step": "vegetal_decoration"
+}

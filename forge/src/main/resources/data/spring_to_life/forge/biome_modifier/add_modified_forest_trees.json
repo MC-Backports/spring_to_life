@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "minecraft:forest",
+  "features": "spring_to_life:trees_birch_and_oak_leaf_litter",
+  "step": "vegetal_decoration"
+}

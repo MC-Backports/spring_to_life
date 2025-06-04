@@ -107,6 +107,8 @@ public class STLBlocks {
                         .sound(SoundType.AZALEA)
                         .pushReaction(PushReaction.DESTROY)
         );
+
+        provider.finalizeRegistrationStage(IRegistrationProvider.RegistrationStage.BLOCKS);
     }
 
 }

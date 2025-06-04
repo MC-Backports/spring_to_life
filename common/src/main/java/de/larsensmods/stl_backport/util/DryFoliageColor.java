@@ -20,7 +20,7 @@ public class DryFoliageColor {
         if(!hasInitialized){
             try {
                 //noinspection deprecation
-                pixels = LegacyStuffWrapper.getPixels(Minecraft.getInstance().getResourceManager(), ResourceLocation.fromNamespaceAndPath(SpringToLifeMod.MOD_ID, "textures/colormap/dry_foliage.png"));
+                pixels = LegacyStuffWrapper.getPixels(Minecraft.getInstance().getResourceManager(), ResourceLocation.tryBuild(SpringToLifeMod.MOD_ID, "textures/colormap/dry_foliage.png"));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
