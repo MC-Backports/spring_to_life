@@ -29,8 +29,10 @@
     ],
     "log_length": {
       "type": "minecraft:uniform",
-      "max_inclusive": 15,
-      "min_inclusive": 5
+      "value": {
+        "max_inclusive": 15,
+        "min_inclusive": 5
+      }
     },
     "stump_decorators": [],
     "trunk_provider": {

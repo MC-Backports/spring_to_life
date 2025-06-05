@@ -1,6 +1,5 @@
 package de.larsensmods.stl_backport.block;
 
-import com.mojang.serialization.MapCodec;
 import de.larsensmods.stl_backport.SpringToLifeMod;
 import de.larsensmods.stl_backport.audio.STLSoundEvents;
 import de.larsensmods.stl_backport.util.SoundUtil;

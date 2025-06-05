@@ -1,7 +1,9 @@
 package de.larsensmods.stl_backport.forge;
 
+import de.larsensmods.stl_backport.block.STLBlocks;
 import de.larsensmods.stl_backport.entity.STLEntityTypes;
 import de.larsensmods.stl_backport.forge.block.*;
+import de.larsensmods.stl_backport.forge.item.STLFuelBlockItem;
 import de.larsensmods.stl_backport.forge.register.ForgeRegistrationProvider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -46,6 +48,10 @@ public final class SpringToLifeModForge {
         registrationProvider.addOverrideKey("item:cold_pig_spawn_egg", (Supplier<Item>) () -> new ForgeSpawnEggItem(STLEntityTypes.COLD_PIG, 0xD8C17C, 0xF1D0AC, new Item.Properties()));
         registrationProvider.addOverrideKey("item:warm_cow_spawn_egg", (Supplier<Item>) () -> new ForgeSpawnEggItem(STLEntityTypes.WARM_COW, 0x994122, 0xBE826C, new Item.Properties()));
         registrationProvider.addOverrideKey("item:cold_cow_spawn_egg", (Supplier<Item>) () -> new ForgeSpawnEggItem(STLEntityTypes.COLD_COW, 0xD8C17C, 0xF1D0AC, new Item.Properties()));
+
+        registrationProvider.addOverrideKey("item:leaf_litter", (Supplier<Item>) () -> new STLFuelBlockItem(STLBlocks.LEAF_LITTER.get(), new Item.Properties(), 100));
+        registrationProvider.addOverrideKey("item:short_dry_grass", (Supplier<Item>) () -> new STLFuelBlockItem(STLBlocks.SHORT_DRY_GRASS.get(), new Item.Properties(), 100));
+        registrationProvider.addOverrideKey("item:tall_dry_grass", (Supplier<Item>) () -> new STLFuelBlockItem(STLBlocks.TALL_DRY_GRASS.get(), new Item.Properties(), 100));
 
         // Run our common setup.
         SpringToLifeMod.init(registrationProvider, FMLEnvironment.dist.isClient());
