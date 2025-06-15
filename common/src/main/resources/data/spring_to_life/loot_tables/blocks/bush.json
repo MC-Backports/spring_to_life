@@ -10,7 +10,7 @@
             {
               "condition": "minecraft:match_tool",
               "predicate": {
-                "items": "minecraft:shears"
+                "items": ["minecraft:shears"]
               }
             },
             {
@@ -34,11 +34,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "spring_to_life:tall_dry_grass"
+          "name": "spring_to_life:bush"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "spring_to_life:blocks/tall_dry_grass"
+  "random_sequence": "spring_to_life:blocks/bush"
 }

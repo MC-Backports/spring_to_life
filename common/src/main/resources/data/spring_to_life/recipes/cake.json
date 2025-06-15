@@ -21,7 +21,6 @@
     "CCC"
   ],
   "result": {
-    "count": 1,
-    "id": "minecraft:cake"
+    "item": "minecraft:cake"
   }
 }

@@ -3,11 +3,10 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "spring_to_life:wildflowers"
+      "item": "spring_to_life:cactus_flower"
     }
   ],
   "result": {
-    "count": 1,
-    "id": "minecraft:yellow_dye"
+    "item": "minecraft:pink_dye"
   }
 }
