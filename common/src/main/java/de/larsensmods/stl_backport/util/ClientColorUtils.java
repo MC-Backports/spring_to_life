@@ -9,12 +9,15 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ColorResolver;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class ClientColorUtils implements ColorUtils {
+
+    private static final int AZALEA_LEAVES_COLOR = 0x70922D;
 
     public static final ColorResolver DRY_FOLIAGE_COLOR_RESOLVER = new ColorResolver() {
         @Override
@@ -30,6 +33,9 @@ public class ClientColorUtils implements ColorUtils {
 
     @Override
     public int getBlockColor(BlockState state, Level level, BlockPos pos, int tintIndex) {
+        if(state.is(Blocks.AZALEA_LEAVES) || state.is(Blocks.FLOWERING_AZALEA_LEAVES)){
+            return AZALEA_LEAVES_COLOR;
+        }
         return Minecraft.getInstance().getBlockColors().getColor(state, level, pos, tintIndex);
     }
 
