@@ -25,7 +25,7 @@ public class LeavesBlockMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void construct(BlockBehaviour.Properties properties, CallbackInfo ci){
-        this.spring_to_life$leafParticleChance = 0.01f;
+        this.spring_to_life$leafParticleChance = 0.0075f;
     }
 
     @Inject(method = "animateTick", at = @At("HEAD"))
