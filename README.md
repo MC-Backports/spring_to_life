@@ -4,6 +4,11 @@ The Spring to Life Backport mod is a Fabric and NeoForge mod trying to bring bac
 drop "Spring to Life" to Minecraft 1.21.1 to allow the features to be used in modpacks relying on mods nod available for
 newer versions.
 
+## Links
+
+https://modrinth.com/mod/spring-to-life-backport <br>
+https://www.curseforge.com/minecraft/mc-mods/spring-to-life-backport
+
 ## Feature List
 
 ### Completed Features:
